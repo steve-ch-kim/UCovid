@@ -1,0 +1,171 @@
+{% extends 'home/main.html' %}
+
+<script>
+{% block jquery %}
+
+var endpoint = '/api/chart/data/'
+var defaultData = []
+var defaultData2 = []
+var defaultData3 = []
+var labels = []
+
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+        labels = data.college_names
+        defaultData = data.total_cases
+        defaultData2 = data.total_deaths
+        defaultData3 = data.total_tests
+
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx = document.getElementById("barChart");
+    var ctx2 = document.getElementById("barChart2");
+    var ctx3 = document.getElementById("doughChart");
+
+    var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '# of total cases by county',
+                data: defaultData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 34, 68, 0.2)',
+                    'rgba(128, 236, 237, 0.2)',
+                    'rgba(79, 140, 135, 0.2)',
+                    'rgba(55, 200, 180, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 34, 68, 0.2)',
+                    'rgba(128, 236, 237, 0.2)',
+                    'rgba(79, 140, 135, 0.2)',
+                    'rgba(55, 200, 180, 0.2)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    var barChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                label: "Total County Tests",
+                backgroundColor: "#3cba9f",
+                data: defaultData3
+                }
+              ]
+            },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    var doughChart = new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Total County Deaths",
+              backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#ff00bf", "#00bfff", "#ba3307", "#5a0bce", "#cc0000"],
+              data: defaultData2
+            }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Total County Deaths'
+          }
+        }
+    });
+}
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+<br>
+
+<div class="row">
+    <div class="col-md-5">
+        <h3>Universities of California:</h3>
+        <hr>
+        <div class="card card-body">
+            <table class="table table-sm">
+                {% for college in colleges %}
+                    <tr>
+                        {% if college.college_name == 'University of California, Irvine' %}
+                            <td><a class="btn btn-outline-info" style="border: 2px solid #5bc0de" href="{% url 'irvine' %}">View</a></td>
+                        {% elif college.college_name == 'University of California, Riverside' %}
+                            <td><a class="btn btn-outline-info" style="border: 2px solid #5bc0de" href="{% url 'riverside' %}">View</a></td>
+                        {% elif college.college_name == 'University of California, Santa Cruz' %}
+                            <td><a class="btn btn-outline-info" style="border: 2px solid #5bc0de" href="{% url 'sc' %}">View</a></td>
+                        {% else %}
+                            <td><a class="btn btn-outline-info" style="border: 2px solid #5bc0de" href="{% url 'view-college' college.id %}">View</a></td>
+                        {% endif %}
+                        <td style="padding-top: 17px;">{{college.college_name}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div class=col-md-7>
+        <canvas id="barChart" width="400" height="250"></canvas>
+        {% for i in '0123456789' %}
+            <br>
+        {% endfor %}
+    </div>
+
+    <div class=col-md-5>
+        <canvas id="barChart2" width="400" height="300"></canvas>
+    </div>
+
+    <div class=col-md-5>
+        <canvas style="margin-left:150px;" id="doughChart" width="350" height="300"></canvas>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'home/main.html' %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white  mb-3" id="total-orders">
+                <div class="card-header">
+                    <h5 class="card-title">{{college.college_name}}</h5><h5 class="card-title"> - Total Cases</h5>
+                </div>
+                {% if college.college_total_cases == None %}
+                    <div class="card-body">
+                        <h3 class="card-title" style="color:red;">N/A</h3>
+                    </div>
+                {% else %}
+                    <div class="card-body">
+                        <h3 class="card-title" style="color:red;">{{college.college_total_cases|intcomma}}</h3>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white  mb-3" id="orders-delivered">
+                <div class="card-header">
+                    <h5 class="card-title">{{college.county_name}} County</h5><h5 class="card-title"> - Total Cases</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{college.county_total_cases|intcomma}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white  mb-3" id="orders-delivered">
+                <div class="card-header">
+                    <h5 class="card-title">{{college.county_name}} County</h5><h5 class="card-title"> - Active Cases</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title" style="color:red;">{{college.county_active_cases|intcomma}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white  mb-3" id="orders-pending">
+                <div class="card-header">
+                    <h5 class="card-title">{{college.county_name}} County</h5><h5 class="card-title"> - New Cases</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">+{{college.county_new_cases|intcomma}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white  mb-3" id="total-orders">
+                <div class="card-header">
+                    <h5 class="card-title">{{college.county_name}} County</h5><h5 class="card-title"> - Total Deaths</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title" style="color:red;">{{college.county_total_deaths|intcomma}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white  mb-3" id="orders-pending">
+                <div class="card-header">
+                    <h5 class="card-title">{{college.county_name}} County</h5><h5 class="card-title"> - Total Tests</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{college.county_total_tests|intcomma}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+<br>
+
+{% endblock %}
